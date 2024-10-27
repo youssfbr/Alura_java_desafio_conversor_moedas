@@ -1,6 +1,6 @@
 package com.github.youssfbr.conversor.utils;
 
-import com.github.youssfbr.conversor.dtos.CurrencyDTO;
+import com.github.youssfbr.conversor.dtos.ExchangeRate;
 import com.google.gson.Gson;
 
 import java.net.URI;
@@ -11,9 +11,10 @@ import java.net.http.HttpResponse;
 public class Converter {
     private static final String YOUR_API_KEY = System.getenv("YOUR_API_KEY");
 
-    public CurrencyDTO getConverter(String currency) {
+    public ExchangeRate exchangeConverter(String baseCode , String targetCode , Double value) {
 
-        URI uri = URI.create("https://v6.exchangerate-api.com/v6/" + YOUR_API_KEY + "/latest/" + currency);
+        URI uri = URI.create("https://v6.exchangerate-api.com/v6/"
+                + YOUR_API_KEY + "/pair/" + baseCode + "/" + targetCode + "/" + value);
 
         try (HttpClient client = HttpClient.newHttpClient()) {
 
@@ -22,12 +23,10 @@ public class Converter {
             HttpResponse<String> response = client
                     .send(request , HttpResponse.BodyHandlers.ofString());
 
-            return new Gson().fromJson(response.body() , CurrencyDTO.class);
+            return new Gson().fromJson(response.body() , ExchangeRate.class);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
-
 }
