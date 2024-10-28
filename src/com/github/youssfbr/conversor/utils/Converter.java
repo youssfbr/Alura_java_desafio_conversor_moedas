@@ -2,6 +2,7 @@ package com.github.youssfbr.conversor.utils;
 
 import com.github.youssfbr.conversor.dtos.ExchangeRate;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -25,8 +26,11 @@ public class Converter {
 
             return new Gson().fromJson(response.body() , ExchangeRate.class);
 
+        } catch (JsonSyntaxException | IllegalStateException e) {
+            throw new RuntimeException("JsonSyntaxException " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
     }
 }
